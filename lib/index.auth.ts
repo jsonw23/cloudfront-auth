@@ -6,8 +6,8 @@ import * as https from "https"
 import base64url from "base64url"
 import { URLSearchParams } from "url"
 
-import { SecretsManagerClient, GetSecretValueCommand, GetSecretValueCommandInput } from "@aws-sdk/client-secrets-manager"
-import { SSMClient, GetParameterCommand, GetParameterCommandInput } from "@aws-sdk/client-ssm"
+import { SecretsManagerClient, GetSecretValueCommand } from "@aws-sdk/client-secrets-manager"
+import { SSMClient, GetParameterCommand } from "@aws-sdk/client-ssm"
 
 import { 
     CloudFrontRequestEvent,
@@ -254,8 +254,9 @@ exports.handler = async (event: CloudFrontRequestEvent, context: Context, callba
         const ssmClient = new SSMClient({
             region: "us-east-1"
         });
+        const functionNameSplit = context.functionName.split('.')
         const ssmOutput = await ssmClient.send(new GetParameterCommand({
-            Name: `cloudfront-auth/${context.functionName}/secretArn`
+            Name: `/cloudfront-auth/${functionNameSplit[1]}/secretArn`
         }))
         const secretArn = ssmOutput.Parameter!.Value
         const result = await secretClient.send(new GetSecretValueCommand({
