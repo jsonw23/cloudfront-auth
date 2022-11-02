@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "test": "jest"
+    "test": "jest",
+    "prepack": "yarn build"
   },
   "devDependencies": {
     "@types/aws-lambda": "^8.10.106",
